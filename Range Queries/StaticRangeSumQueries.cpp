@@ -3,10 +3,10 @@ using namespace std;
 
 int main(){
 	int n,q; cin>>n>>q;
-	vector<int> v;
+	vector<long long> v;
 	v.push_back(0);
 	while(n--){
-		int cur; cin>>cur;
+		long long cur; cin>>cur;
 		cur += v.back();
 		v.push_back(cur);
 	}
