@@ -1,3 +1,14 @@
+# Mac Setup for sublime
+
+`
+	{
+  "cmd" : ["g++-11 $file_name -o ${file_base_name}.out && gtimeout 4s ./${file_base_name}.out<inputf.in>outputf.in && rm ${file_base_name}.out"],
+  "selector" : "source.cpp",
+  "shell": true,
+  "working_dir" : "$file_path"
+}
+`
+
 # cses
 CSES problemset solutions
 
