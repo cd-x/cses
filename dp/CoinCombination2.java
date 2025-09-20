@@ -15,23 +15,28 @@ public class CoinCombination2 {
         System.out.println(solve(n, x, coins));
     }
 
-    // dp[x][i] = number of ordered distinct
+    // dp[i][x] = number of ordered distinct
     // ways to get sum as x  from i->n elements
     // transition dp[x][n] = sum{ dp[x-coins][n+1] + dp[x-coins][n+2] + ...} = suffix sum{dp[x-coins][i..n+1]}
 
     private static long solve(int n, int x, int[] coins){
-        long[][] dp = new long[n+1][x+1];
-        for(int i=0;i<n;i++) dp[i][0] = 1;
-
+        long[] prev = new long[x+1];
+        long[] cur = new long[x+1];
+        prev[0] = 1;
         for(int i=n-1;i>=0;i--){
-            for(int sum=coins[i];sum<=x;sum++){
+            for(int j=0;j<=x;j++){
                 // pick + skip
-                dp[i][sum] = dp[i+1][sum];
-                if(coins[i] <= sum){
-                    dp[i][sum] = (dp[i][sum] + dp[i][sum - coins[i]])%MOD;
+                cur[j] = prev[j];
+                if(coins[i] <= j){
+                    cur[j] = (cur[j] + cur[j - coins[i]])%MOD;
                 }
             }
+//            System.out.printf("\nfor i: %d \nprev: ", i);
+//            for(long y: prev) System.out.printf("%d ", y);
+//            System.out.print("\ncur: ");
+//            for(long y : cur) System.out.printf("%d ", y);
+            if (x + 1 >= 0) System.arraycopy(cur, 0, prev, 0, x + 1);
         }
-        return dp[0][x]%MOD;
+        return cur[x];
     }
 }
