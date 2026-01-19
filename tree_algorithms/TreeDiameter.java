@@ -1,13 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class TreeDiameter {
     private static List<Integer>[] tree;
-    private static int res = 0;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
@@ -22,23 +19,38 @@ public class TreeDiameter {
             tree[u].add(v);
             tree[v].add(u);
         }
-        dfs(1, 0);
-        System.out.println(res-1);
-    }
-
-    private static int dfs(int root, int par){
-        int max1 = 0, max2 = 0;
-        for(int child : tree[root]) {
-            if(child == par) continue;
-            int d = dfs(child, root);
-            if(d > max2) {
-                max1 = max2;
-                max2 = d;
-            } else if(d > max1) {
-                max1 = d;
+        int[] dist = new int[n+1];
+        bfs(1, dist);
+        int node1 = 1;
+        for(int i=1;i<=n;i++){
+            if(dist[i] > dist[node1]){
+                node1 = i;
             }
         }
-        res = Math.max(res, max1 + max2 + 1);  // Edge count
-        return max2 + 1;
+        //System.out.printf("node1: %d, dist: %s\n", node1, Arrays.toString(dist));
+        bfs(node1, dist);
+        int node2 = node1;
+        for(int i=1;i<=n;i++){
+            if(dist[i] > dist[node2]){
+                node2 = i;
+            }
+        }
+        //System.out.printf("node2: %d, dist: %s\n", node2, Arrays.toString(dist));
+        System.out.println(dist[node2]);
+    }
+
+    private static void bfs(int root, int[] dist){
+        Arrays.fill(dist, -1);
+        dist[root] = 0;
+        Queue<Integer> q = new LinkedList<>(Collections.singleton(root));
+        while (!q.isEmpty()){
+            int u = q.poll();
+            for(Integer v : tree[u]){
+                if(dist[v] < 0){
+                    dist[v] = dist[u] + 1;
+                    q.add(v);
+                }
+            }
+        }
     }
 }
